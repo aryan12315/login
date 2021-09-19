@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        
 
         username=(EditText)findViewById(R.id.editUId);
         password=(EditText)findViewById(R.id.editPass);
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
     public Session getSession() {
         if (session == null) {
             session = new Session() {
