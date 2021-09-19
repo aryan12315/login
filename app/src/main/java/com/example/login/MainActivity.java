@@ -14,7 +14,9 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,14 +62,37 @@ public class MainActivity extends AppCompatActivity {
         loginRequest.setPassword(password.getText().toString());
         loginRequest.setRole(0);
 
-        Call<LoginResponse> loginResponseCall=ApiClient.getUserService().userLogin(loginRequest);
+
+        //Call<LoginResponse> loginResponseCall=ApiClient.getUserService().userLogin(loginRequest);
+
+        HttpLoggingInterceptor httpLoggingInterceptor=new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        int cacheSize = 10 * 1024 * 1024; // 10 MB
+        Cache cache = new Cache(getCacheDir(), cacheSize);
+
+        OkHttpClient okHttpClient= new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .cache(cache)
+                .build();
+
+        Retrofit retrofit= new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("http://34.82.126.49/")
+                .client(okHttpClient)
+                .build();
+
+
+        UserService userService =retrofit.create(UserService.class);
+        Call<LoginResponse> loginResponseCall=userService.userLogin(loginRequest);
+
 
         loginResponseCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if(response.isSuccessful()){
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_LONG).show();
-                    Log.d("Data succes",response.toString());
+
+                    Log.d("Data success",response.toString());
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_LONG).show();

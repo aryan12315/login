@@ -1,5 +1,7 @@
 package com.example.login;
 
+import android.content.Context;
+
 import java.io.File;
 
 import okhttp3.Cache;
@@ -14,13 +16,11 @@ public class ApiClient {
         HttpLoggingInterceptor httpLoggingInterceptor=new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        int cacheSize = 10 * 1024 * 1024; // 10 MB
-        Cache cache = new Cache(getCacheDir(), cacheSize);
+
 
 
         OkHttpClient okHttpClient= new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
-                .cache(cache)
                 .build();
 
         Retrofit retrofit= new Retrofit.Builder()
@@ -31,8 +31,7 @@ public class ApiClient {
         return retrofit;
     }
 
-    private static File getCacheDir() {
-    }
+
 
     public static UserService getUserService(){
         UserService userService= getRetrofit().create(UserService.class);
